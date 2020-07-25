@@ -5,15 +5,15 @@
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "1202349234",
+    "hash" : "1250763039",
     "id" : "239668C5",
-    "lastKnownWriteTime" : 1595712300,
-    "last_content_update" : 1595712300156,
+    "lastKnownWriteTime" : 1595716170,
+    "last_content_update" : 1595716170821,
     "path" : "C:/Users/Virgilio/Desktop/Introducao_ao_R_MEIOS/Aulas/Aula_01/codigo_aula_01.R",
     "project_path" : "codigo_aula_01.R",
     "properties" : {
-        "cursorPosition" : "168,0",
-        "scrollLine" : "153"
+        "cursorPosition" : "191,29",
+        "scrollLine" : "178"
     },
     "read_only" : false,
     "read_only_alternatives" : [

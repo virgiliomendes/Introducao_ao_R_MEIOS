@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1595714196365.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3352186550",
+    "id" : "8E317207",
+    "lastKnownWriteTime" : 1595714554,
+    "last_content_update" : 1595714554588,
+    "path" : "C:/Users/Virgilio/Desktop/Introducao_ao_R_MEIOS/Aulas/Aula_02/codigo_aula_02.R",
+    "project_path" : "codigo_aula_02.R",
+    "properties" : {
+        "cursorPosition" : "125,64",
+        "scrollLine" : "106"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

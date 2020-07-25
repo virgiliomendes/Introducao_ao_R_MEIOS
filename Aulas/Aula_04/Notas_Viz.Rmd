@@ -1,0 +1,279 @@
+---
+fontsize: 12pt
+output:
+  pdf_document:
+    fig_caption: true
+    keep_tex: true
+    number_sections: true 
+    dev: cairo_pdf
+    includes: 
+      in_header: preamble.tex
+  html_notebook: 
+    number_sections: true
+---
+```{r setup, include=FALSE}
+library(knitr)
+library(tinytex)
+library(Cairo)
+opts_chunk$set(echo = TRUE,
+               fig.path='figure/graphics-', 
+               cache.path='cache/graphics-', 
+                fig.align='center',
+               #external=TRUE,
+                warning=FALSE,
+                message=FALSE,
+                results = "asis",
+                fig.pos='H'#,
+                #fig.show='asis'
+                )
+```
+
+\begin{center}
+{\Large Metodologia \\
+\textbf{Introdução a visuzalição de dados com R}}
+
+Artur Henrique Guimarães Quirino \footnote{Mestrando em Ciência Política; E-mail: arturhgq@gmail.com.}
+	\vspace{10pt}
+
+	\textit{Universidade Federal de Minas Gerais} \\
+	Faculdade de Filosofia e Ciências Humanas  \\
+	Programa de Pós-Graduação em Ciência Política  \\
+	\vspace{20pt}
+	MODUS  \\
+	Docente: Denisson Silva \\
+
+\today \\
+Versão 1.0
+\end{center}
+
+\tableofcontents
+# Aula 01
+
+Objetivos para a produção de dados: Decorativo, Estatístico ou ambos. Infográficos são decorativos, feitos para pessoas que não são acostumadas com dados, design. Infoviz informam, são feitos para leitores habituados com dados, estatísticos.
+
+Estudaremos gráficos, quadros e tabelas.
+
+Títulos devem ser claros. Se elementos visuais -- gráficos, quadros e tabelas -- precisarem ser acompanhados de textos explicativos, estão mal elaborados 
+
+Quadros para dados qualitativos
+
+Tabelas para dados quantitativos
+
+Gráficos servem, essencialmente para comparação.
+
+
+\subsection{Para que serve visualização de dados?}
+
+\begin{enumerate}
+	\item Apresentar
+	\item Persuadir
+	\item Contar uma história
+\end{enumerate} 
+
+As escalas reduzem ou aumentam a quantidade de detalhes de um gráfico.
+
+Não existem regras para a produção de dados. Contudo, existem princípios e restrições causadas pela natureza dos dados.
+
+\subsection{Princípios}
+
+\begin{enumerate}
+	\item Minimizar a quantidade de dados apresentados e maximizar clareza
+	\item Reduzir o mínimo possível a taxa de tinta \textbackslash dados (Tufte,1983)
+	\item Os elementos visuais dos gráficos devem ser coerentes com a informação apresentada, evitando qualquer distorção que os dados querem dizer (Tufte, 1983)
+	\item Selecionar uma escala significativa e utilizar a mesma escala, se o objetivo é comparar. Para os estatísticos o objetivo de dois gráficos é comparação.
+	\item Induzir o visualizador a pensar sobre a substância em vez de pensar sobre metodologia, design, a tecnologia da produção do gráfico, ou outra coisa qualquer.
+	\item Quando se utilizam grandes conjuntos de dados ou muitas categorias é recomendável combinar-las de forma significativa (Kelleher e Wagener,2011).
+	\item Escolhar um esquema de cores apropriados para os dados (Kelleher e Wagener,2011)
+\end{enumerate}
+
+\subsection{Cuidados}
+
+\begin{enumerate}
+	\item Redundância
+	\item Dois eixos em duas escalas diferentes
+	\item Escalas diferentes no geral. Isto é feito em programas de edição.
+	\item Com escalas flutuantes perde-se em comparação  
+	\item Com escalas diferentes conta-se diferentes histórias.
+	\item Paleta de cores preta e branca para cobrir daltônicos.
+\end{enumerate}
+
+Existem pacotes no R especializados em infográficos.
+
+Gráficos de pizzas são gráficos de barras ``plotados'' em coordenadas polares.
+
+Gráficos com muitas categorias são ruins.
+
+O R tem escala de cores para daltônicos.
+
+Escalas de cores: de divergência, de sequência, qualitativa
+
+\subsection{Gramática de grafos}
+
+Três elementos fundamentais 
+
+\begin{enumerate}
+  \item Dados: Os dados são necessários para c riar o gráfico
+  \item Estética (Aesthetics): A escla em que as informações são apresentadas
+  \item Geometria: Os elementos visuais que dão forma ao gráfico
+\end{enumerate}
+
+Outros elementos
+
+\begin{enumerate}
+  \item Facet: A possibilidade de criar vários gráficos de forma simultânea
+  \item Statistics: A possibilidade de representar transformações estatísticas
+  \item Coordenadas: Sistema de coordenadas
+  \item Theme: Todos os elementos adicionais ao dados 
+\end{enumerate}
+
+\subsection{Prática}
+
+# Aula 02 
+
+Comunidade Oficial do R (CRAN)
+
+```{r,fig.height= 4, fig.width= 6}
+# criando um data.frame 
+
+base <- data.frame(nome = c("j", "m", "t", "z"),
+                   turma = c("d", "a","d","a"),
+                   nota = c(8,7,4,NA))
+
+plot(c(1:10), c(10:1))
+
+# a funcao principal do pacote ggplot2 e' a funcao ggplot 
+#que tem como argumentos principais
+
+alunos <- data.frame(area = c("CP", "EDU", "Comunicação", 
+                              "Sociologia", "GP", "CS", "ADM"),
+                     quanti = c (16,1,2,4,2,3,1))
+```
+
+
+```{r, width = 6, height = 4}
+library(tidyverse)
+library(ggthemes)
+ggplot(data = alunos,
+       mapping = aes(area, quanti))+
+  geom_bar(stat = "identity", fill = "#F73633")+
+  theme_few()+
+  labs(title = "Alunos MODUS",
+       x = "Área de conhecimento",
+       y = "Nº Alunos")+
+  geom_label(aes(label = quanti), 
+             color = "black", 
+             size = 3.5, 
+             vjust = 0)+
+  scale_y_continuous(limits = c(0,30), breaks = seq(0,30,5)) #Plotando as informações em 
+                          #relação a população e não ao maior valor
+ggsave("fig.pdf", width = 6, height = 4, dpi = 300, device = cairo_pdf)
+ggsave("fig.png", width = 6, height = 4, dpi = 300, type = "cairo")
+
+```
+
+PDF é um elemento gráfico. Uma forma de tipografia.
+
+## R markdown
+
+Linguagem do campo de configuração: YAML
+
+O que é PANDOC?
+
+É possível adicionar teamplates de revistas no R studio para gerar arquivos R markdown.
+
+```{r echo = FALSE,fig.height= 4, fig.width= 6}
+#rm(list = ls()) #Limpa o Global Envriroment
+
+#base <- read.csv2("dados/mg_perfil_comparecimento_abstencao_2018.csv")
+#base <- base %>% filter(NM_MUNICIPIO == "BELO HORIZONTE")
+#write.csv(base, "mg_perfil_comparecimento_abstencao_20182.csv")
+
+base <- read.csv("mg_perfil_comparecimento_abstencao_20182.csv")
+
+ggplot(data = base)+
+  geom_point(aes(QT_COMPARECIMENTO, QT_ABSTENCAO))+
+  theme_few()+
+  labs(title = "Abstenção por Comparecimento eleitoral em BH, 2018",
+       x = "Comparecimento Eleitoral",
+       y= "Abstenção")
+```
+
+## Exercicio: 
+
+1) Gerar dois ou três gráficos
+
+```{r echo = FALSE,fig.height= 4, fig.width= 6}
+ggplot()+ 
+  theme_few()+
+  geom_bar(data=base, aes(x = DS_GENERO, y = QT_COMPARECIMENTO), stat="identity")+
+    labs(title = "Comparecimento eleitoral por Gênero, em 2018",
+       x = "Faixa etária",
+       y = "Gênero")
+
+
+ggplot()+ 
+  theme_few()+
+  geom_bar(data=base, aes(x = DS_GENERO, y = QT_ABSTENCAO, fill = DS_GENERO), stat="identity")+
+    labs(title = "Abstenção eleitoral por Gênero, em 2018",
+       x = "Faixa etária",
+       y = "Gênero")
+  
+```
+
+
+# Aula 03: Shiny e ggplot2
+
+```{r,fig.height= 4, fig.width= 6} 
+ggplot()+
+  geom_point(data= base, aes(QT_COMPARECIMENTO, QT_ABSTENCAO, 
+                             color = DS_GENERO)
+             , shape =21, show.legend = FALSE)+
+  theme_few()+
+  labs(title= "Abstenção por Comparecimento Eleitoral,
+       dividido por Gênero, em 2018")+
+  facet_wrap(~DS_GENERO)
+```
+
+
+```{r, fig.height= 4, fig.width= 6} 
+ggplot()+
+  geom_bar(data = base, aes(DS_GENERO, QT_COMPARECIMENTO, 
+                            fill = DS_GENERO), 
+           position = "dodge",
+           stat = "summary", fun.y = "sum")+
+           theme_few()+
+             labs(
+               title = "Comparecimento Eleitoral por Grau de Escolaridade,
+               dividido por Gênero, em 2018",
+                 y = "Grau de Escolaridade",
+                x = "Compacimento"
+             )+
+  facet_wrap(~DS_GRAU_ESCOLARIDADE)+
+  theme(axis.text.x = element_blank())
+```
+
+
+```{r}
+#Construindo tabelas descritivas
+
+library(psych)
+library(kableExtra)
+desc <- describeBy(base$QT_ABSTENCAO, group = base$DS_GENERO, mat = T)
+
+kable(desc[,c(2,4:8,10:12)], row.names = F, 
+      caption = "Estatísticas Descritivas da Variável 
+      Abstenção por categoria de Gênero", booktabs = T)%>%
+  kable_styling(latex_options = c("scale_down", "hold_position"))
+```
+
+```{r}
+library(stargazer)
+md1 <- lm(data = base, QT_ABSTENCAO ~ DS_ESTADO_CIVIL + DS_GENERO)
+md2 <- lm(data = base, QT_COMPARECIMENTO ~ DS_ESTADO_CIVIL + DS_GENERO)
+
+stargazer(md1, md2, header=F,
+          dep.var.labels.include = FALSE,
+          title ="OLS para Abstenção e Comparecimento",
+          style = "ajps")
+```
+

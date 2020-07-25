@@ -4,180 +4,157 @@
 # Ciência Política - UFMG
 # Aula 03
 
-# executando a LIBRARY
+
+# instalando e carregando os pacotes
+#install.packages("PNADcIBGE")
+library(PNADcIBGE)
+library(dplyr)
 library(ggplot2)
+library(questionr)
 
-#definindo diretorio para executar e salvar arquivos
-setwd("C:/Users/Virgilio/Desktop/curso GGPLOT/Curso_GGPLOT2_-_Estatística_UFMG_files/Curso GGPLO2 - Stat UFMG")
+# comando para importar a pnad contínua de 2019 - 2 trimestre
+pnad = get_pnadc(2019, 2,
+                 vars = c("Ano", "Trimestre", "UF", "Capital",
+                          "UPA", "Estrato", "V1022", "V1028",
+                          "V2007", "V2009", "V2010", 
+                          "VD3005", "VD4016", "VD4019", "VD4031"))
+pnad
+class(pnad)
 
-# importando o banco de dados IRIS e nomeando ele de BD
-bd = iris
+# pacote chamado survey design
+library(srvyr)
 
-#Plotando um grafico de dispersão 
-ggplot(bd, aes(x = Sepal.Length, y = Sepal.Width)) +
-  geom_point(size = 2, shape = 1)
+# transformando o banco da pnad em tibble
 
-#salva grafico no diretorio selecionado
-ggsave("r plot1 iris.pdf")
+bd = pnad$variables %>% as_tibble()
 
-# puxa os nomes das variaveis do banco selecionado
-names(bd)
+# chama o banco 
+bd
 
-#Plotando um grafico de dispersão 
-ggplot(bd, aes( x = Sepal.Length, y = Sepal.Width, col = Species)) +
-  geom_point(size = 2, shape = 1) 
-
-ggsave("r plot2 iris.pdf")
-
-# bloxpot
-ggplot(bd, aes(x = Species, y = Sepal.Width)) +
-  geom_boxplot()
-
-ggsave("r plot3 iris.pdf")
+# dimensões do banco
+dim(bd)
 
 
-#plotando histograma
-ggplot(bd, aes(x = Sepal.Length,fill = factor(Sepal.Length))) + 
-  geom_histogram(bins = 10, col = "white")
+#
+bd %>%
+  select(V2007:VD4031)
 
-ggsave("histograma1.pdf")
+# transforma anos de escolaridade em nunerica
+head(bd$VD3005) %>% as.numeric()
+# temos um problema nas categorias, ja que o r entende que quem não é escolarizado
+# possui 1 ano de escolarização, sendo necessario subtrair um ano para cada
+# contabilização
 
-#Grafico de densidade
-ggplot(bd, aes(x = Sepal.Length, fill = Species)) +
-  geom_density(alpha = 0.5) 
+# criar anoesesco com valores corrigidos
+bd$anosesco = as.numeric(bd$VD3005) - 1
+summary(bd$anosesco)
 
-ggsave("grafico camadas1.pdf")
+# V2010 - cor da pele
+freq(bd$V2010)
 
-#Grafico de Linha
-ggplot(swiss, aes(x = Examination, y = Education)) +
-  geom_line(size = 1)
+# transforma bd$V2010 em character
+bd$cor = as.character(bd$V2010)
 
-ggsave("grafico de linha IRIS1.pdf")
-
-#Histograma com Nomes (titulos)
-ggplot(iris, aes(x = Sepal.Length)) + geom_histogram(bins = 10, col = "white") +
-  labs(title = "Histograma de Comprimento da Sépala",
-       subtitle = "Gráfico", x = "Comprimento da Sépala",
-       y = "Frequência")
-
-ggsave("Histograma Comprimento da Sepala1.pdf")
-
-# Plotando com "Stats"
-ggplot(bd, aes(sample = Sepal.Width)) +
-  stat_qq()
-
-ggsave("grafico IRISstats.pdf")
-
-#Grafico de dispersão - Stats com escala
-ggplot(bd, aes(x = Sepal.Length, y = Sepal.Width)) +
-  geom_point() +
-  scale_x_continuous(limits = c(4, 7), breaks = c(4, 5, 6)) +
-  scale_y_continuous(limits = c(0, 7), breaks = c(4, 5, 6)) +
-  labs(title = "Grafico de Dispersão de Comprimento da Sépala por Largura da Sépala",
-       subtitle = "Gráfico", x = "Comprimento da Sépala",
-       y = "lagura da Sépala")
-
-ggsave("dispersãoIRIS1.pdf", width = 8, height = 4)
+bd$cor = ifelse(bd$V2010 == "Ignorado", NA, bd$cor)
+freq(bd$cor)
+# nos casos que BD 2010 for igual a "Ignorado" transforme em NA, senão a 
+# variável mantem o valor
 
 
-#Geom_ Smooth - grafico de tendencia
-ggplot(bd, aes(x = Sepal.Length, y = Petal.Length)) +
-  geom_point() +
-  geom_smooth()
+# criando a variavel binaria branco
+# se a variavel bd$cor for a Branca ou se a variavel bd$cor
+# for igual a Amarela, atribua Branco. Senão, atribua Negro
+bd$branco = ifelse(bd$cor == "Branca" | bd$cor == "Amarela", "Branco", "Negro")
 
-ggsave("grafico de tendencia1.pdf")
+table(bd$cor, bd$branco)
 
-# grafico de tendencia por especie
-ggplot(bd, aes(x = Sepal.Length, y = Petal.Length, col = Species)) +
-  geom_point() +
-  geom_smooth(method = "lm")
+# Insvestigações
 
-ggsave("grafico de tendencia por especie.pdf")
+# Estatíticas descritivas de renda # sem considerar os pesos
 
-####################################################
+summary(bd$VD4019)
 
-# Importando o banco MTCARS
-mtcars = mtcars
-
-#Puxando os nomes das variaveis
-names(mtcars)
-ggplot(mtcars, aes( x = gear, fill = factor(carb))) +
-  geom_bar(size = 1.5, colour = 'white', alpha = 0.6) 
-
-ggsave("mtcars1.pdf")
-
-# Plotando   
-ggplot(mtcars, aes( x = gear, fill = factor(carb))) +
-  geom_bar(position = "fill") 
-
-ggsave("mtcars2.pdf")
+# Tirar subamostra da pnad
+# entre 25 e 60 anos (apenas a PEA)
+summary(bd$V2009)
+bd = bd %>% 
+  filter(V2009 > 24 & V2009 < 61)
 
 
 
-#Facets- tirar a escala do X e Y
-ggplot(mtcars, aes(x = mpg, y = disp)) + geom_point() +
-  facet_grid(.~am, scales = "free") +
-  geom_smooth(method = "lm") 
+# Renda para pessoas entre 25 e 60 anos
+summary(bd$V2009) # lembrando que no comando acima ja foi 
+# selecionado a faixa de idade 
 
-ggsave("Mtcarsvertical.pdf")
-#Facets- tirar a escala do X e Y
-ggplot(mtcars, aes(x = mpg, y = disp)) + geom_point() +
-  facet_grid(am~., scales = "free") +
-  geom_smooth(method = "lm")
-
-ggsave("MtcarsHorizontal.pdf")
-
-# o "~." depois do AM separa duas categorias discretas na horizontal
-# o ".~" antes do AM separa duas categorias discretas na vertical
+# As diferenças de renda entre homens e mulheres
+bd %>% 
+  group_by(V2007) %>% 
+  summarise(medrenda = mean(VD4019, na.rm = T))
+table(bd$V2007)
+# Vamos aplicar um teste t para verificar se a diferença 
+# de salario entre homens e mulheres no Brasil
+# pode ser inferida para a população
+t.test(VD4019 ~ V2007, data = bd)
 
 
+# Renda por Branco / Negro (cor agregada)
+bd %>% 
+  group_by(branco) %>% 
+  summarise(merenda = mean(VD4019, na.rm = T))
+# Vamos aplicar um teste t para verificar se a diferença 
+# de salario entre brancos e negros no Brasil
+# pode ser inferida para a população
+t.test(VD4019 ~ branco, data = bd)
 
+# Renda por  cor da pele
+bd %>% 
+  group_by(cor) %>% 
+  summarise(merenda = mean(VD4019, na.rm = T))
 
-#################
-# como salvar arquivos de grafico pelo ggplot
-ggsave(filename = "grafico.png",
-       width = 6, height = 2.8)
+# tirando ANOVA - teste de diferença de variança
+rea_anova = aov(VD4019 ~ cor, data = bd)
+summary(rea_anova)
 
-# Personalizando o grafico
+# Correlação de Bonferroni - Famosa correção de Bonferroni
+pairwise.t.test(bd$VD4019, bd$cor, p.adjust.method = "bonferroni")
+# compara cada categoria entre as variaveis e suas diferenças entre medias
 
-#tipos de  temas para plotagem de grafico
-# + themes_gray ()
-# + theme_dark ()
-# + theme_bw ()
-# + theme_classic ()
-
-
-# Legendas:
-
-# + theme (legend.positions = "top")
-
-
-# Paleta de cores:
-library(RColorBrewer)
-display.brewer.all()
-
-
-# + scale_fill_brewer(palette = "Dark2") - > substituir "Dark2" pela paleta de cor que desejar
+# Comparando  médias de renda por sexo e cor
+bd %>% 
+  group_by(V2007, cor) %>% 
+  summarise(merenda = mean(VD4019, na.rm = T))
 
 
 
-
-# Teste de BoxPlot
-
-# bloxpot
-ggplot(bd, aes(x = Species, y = Petal.Length, fill = Species)) +
+# Boxplot para renda
+bd %>% 
+  ggplot(aes(x=1, y=VD4019)) +
   geom_boxplot() +
-  theme_classic() +
-  scale_fill_brewer(palette = "Set1",
-                    labels=c("Setosa", "Versicolor", "Virginica")) +
-  scale_x_discrete(lab=NULL) +
-  labs(title = "Boxplot", subtitle = "Largura da Pétala por Espécie",
-       x = "", y = "Lagura da Pétala", fill = "Especie") +
-  theme(plot.title = element_text(hjust = 0.5), plot.subtitle = element_text(hjust = 0.5)) 
-  
+  scale_y_continuous(limits = c(0, 3000))
 
-ggsave("bloxpotEXERCICIO.pdf", width = 6, height = 4)
+# Box plot colorido
+bd %>% 
+  ggplot(aes(x=V2007, y=VD4019,
+             fill = V2007)) +
+  geom_boxplot() +
+  scale_y_continuous(limits = c(0, 3000)) +
+  scale_fill_manual(values = c("green", "purple"))
 
+# Mostrando a renda por sexo
+bd %>% 
+  ggplot(aes(x=VD4019,
+             fill = V2007)) +
+  geom_histogram() +
+  scale_x_continuous(limits = c(0, 3000)) +
+  scale_fill_manual(values = c("green", "purple")) # defina as cores manualmente
 
+# Para renda e cor
+bd %>% 
+  filter(!is.na(cor)) %>% # filtra todos os casos que não são NA (NA's são omitidos)
+  ggplot(aes(x=cor, y=VD4019,
+             fill = cor)) +
+  geom_boxplot() +
+  scale_y_continuous(limits = c(0, 3000)) +
+  facet_wrap(~V2007)
 
 

@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1595715669977.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3467058026",
+    "id" : "6FD49990",
+    "lastKnownWriteTime" : 1595715581,
+    "last_content_update" : 1595715581,
+    "path" : "C:/Users/Virgilio/Desktop/Introducao_ao_R_MEIOS/Aulas/Aula_04/Notas_Viz.Rmd",
+    "project_path" : "Notas_Viz.Rmd",
+    "properties" : {
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

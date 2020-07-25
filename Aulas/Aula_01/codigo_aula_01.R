@@ -187,7 +187,9 @@ sd(starwars$height, na.rm = T)
 barplot(table(starwars$gender))
 
 
+options(scipen = 999) # tira notação científica
 
+rm(list = ls()) # limpa tudo 
 
 
  

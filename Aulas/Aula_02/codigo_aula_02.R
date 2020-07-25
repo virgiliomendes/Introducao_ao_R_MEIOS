@@ -4,180 +4,123 @@
 # Ciência Política - UFMG
 # Aula 02
 
-# executando a LIBRARY
-library(ggplot2)
+# carregando os pacotes
+library(readxl) # Read Excel Files
+library(dplyr) # a grammar of data manipulation
+library(questionr) # tabela de frequencia e processamento simples
+library(ggplot2) # visualização de dados
+library(janitor) # processamento e limpeza de dados para importação e formatação
+library(lubridate) # processamento de informação para data
+library(ggrepel) # representação de valor nos gráficos
+library(ggthemes) #temas para ggplot
 
-#definindo diretorio para executar e salvar arquivos
-setwd("C:/Users/Virgilio/Desktop/curso GGPLOT/Curso_GGPLOT2_-_Estatística_UFMG_files/Curso GGPLO2 - Stat UFMG")
 
-# importando o banco de dados IRIS e nomeando ele de BD
-bd = iris
 
-#Plotando um grafico de dispersão 
-ggplot(bd, aes(x = Sepal.Length, y = Sepal.Width)) +
-  geom_point(size = 2, shape = 1)
+# importando o banco de dados
+bd = read_excel("/home/virgilioam/Desktop/Indicadores no R/dados_juridicos.xlsx")
+# quando há mais de uma sheet ou aba no arquivo excel, usar o comando ", sheet = <nome.da.aba>"
 
-#salva grafico no diretorio selecionado
-ggsave("r plot1 iris.pdf")
+# comando para visualizar o banco
+View(bd)
+bd %>% View()
 
-# puxa os nomes das variaveis do banco selecionado
+# comando para mostrar os nomes das variáveis
 names(bd)
 
-#Plotando um grafico de dispersão 
-ggplot(bd, aes( x = Sepal.Length, y = Sepal.Width, col = Species)) +
-  geom_point(size = 2, shape = 1) 
+# comando para mostrar a classe de uma determinada variavel
+class(bd$`Pólo do Cliente`)
 
-ggsave("r plot2 iris.pdf")
-
-# bloxpot
-ggplot(bd, aes(x = Species, y = Sepal.Width)) +
-  geom_boxplot()
-
-ggsave("r plot3 iris.pdf")
+# comando para tirar tabelas de frequencia e proporção
+table(bd$`Pólo do Cliente`)
+freq(bd$`Pólo do Cliente`, )
 
 
-#plotando histograma
-ggplot(bd, aes(x = Sepal.Length,fill = factor(Sepal.Length))) + 
-  geom_histogram(bins = 10, col = "white")
+# Transformando uma variavel em categorica
+bd$Matéria = as.factor(bd$Matéria)
 
-ggsave("histograma1.pdf")
-
-#Grafico de densidade
-ggplot(bd, aes(x = Sepal.Length, fill = Species)) +
-  geom_density(alpha = 0.5) 
-
-ggsave("grafico camadas1.pdf")
-
-#Grafico de Linha
-ggplot(swiss, aes(x = Examination, y = Education)) +
-  geom_line(size = 1)
-
-ggsave("grafico de linha IRIS1.pdf")
-
-#Histograma com Nomes (titulos)
-ggplot(iris, aes(x = Sepal.Length)) + geom_histogram(bins = 10, col = "white") +
-  labs(title = "Histograma de Comprimento da Sépala",
-       subtitle = "Gráfico", x = "Comprimento da Sépala",
-       y = "Frequência")
-
-ggsave("Histograma Comprimento da Sepala1.pdf")
-
-# Plotando com "Stats"
-ggplot(bd, aes(sample = Sepal.Width)) +
-  stat_qq()
-
-ggsave("grafico IRISstats.pdf")
-
-#Grafico de dispersão - Stats com escala
-ggplot(bd, aes(x = Sepal.Length, y = Sepal.Width)) +
-  geom_point() +
-  scale_x_continuous(limits = c(4, 7), breaks = c(4, 5, 6)) +
-  scale_y_continuous(limits = c(0, 7), breaks = c(4, 5, 6)) +
-  labs(title = "Grafico de Dispersão de Comprimento da Sépala por Largura da Sépala",
-       subtitle = "Gráfico", x = "Comprimento da Sépala",
-       y = "lagura da Sépala")
-
-ggsave("dispersãoIRIS1.pdf", width = 8, height = 4)
+# função para limpar os characteres do pacote janitor
+bd = clean_names(bd)
+names(bd)
 
 
-#Geom_ Smooth - grafico de tendencia
-ggplot(bd, aes(x = Sepal.Length, y = Petal.Length)) +
-  geom_point() +
-  geom_smooth()
+# Passo - Análise exploratória de Dados
 
-ggsave("grafico de tendencia1.pdf")
+# função para puxar os seis primeiros casos do banco
+head(bd$data_de_entrada_do_processo)
 
-# grafico de tendencia por especie
-ggplot(bd, aes(x = Sepal.Length, y = Petal.Length, col = Species)) +
-  geom_point() +
-  geom_smooth(method = "lm")
-
-ggsave("grafico de tendencia por especie.pdf")
-
-####################################################
-
-# Importando o banco MTCARS
-mtcars = mtcars
-
-#Puxando os nomes das variaveis
-names(mtcars)
-ggplot(mtcars, aes( x = gear, fill = factor(carb))) +
-  geom_bar(size = 1.5, colour = 'white', alpha = 0.6) 
-
-ggsave("mtcars1.pdf")
-
-# Plotando   
-ggplot(mtcars, aes( x = gear, fill = factor(carb))) +
-  geom_bar(position = "fill") 
-
-ggsave("mtcars2.pdf")
+# função para tirar tabela de frequência simples da variavel
+freq(bd$polo_do_cliente)
 
 
+# construindo uma tabela ordenada com função freq
+t = freq(bd$corte)
+t
+class(t)
 
-#Facets- tirar a escala do X e Y
-ggplot(mtcars, aes(x = mpg, y = disp)) + geom_point() +
-  facet_grid(.~am, scales = "free") +
-  geom_smooth(method = "lm") 
+# Na logica tidy
+# %>%  -> separador -> encadear ações
+# atalho -> CTRL + SHIFT + M
+# Começo com o banco de dados
 
-ggsave("Mtcarsvertical.pdf")
-#Facets- tirar a escala do X e Y
-ggplot(mtcars, aes(x = mpg, y = disp)) + geom_point() +
-  facet_grid(am~., scales = "free") +
-  geom_smooth(method = "lm")
+t %>% 
+  mutate(corte = rownames(t)) %>% # cria uma nova coluna
+  select(corte, n , `%`, `val%`) %>%  # seleciona colunas na ordem especifica
+  arrange(desc(n))
 
-ggsave("MtcarsHorizontal.pdf")
+##########################################################################
 
-# o "~." depois do AM separa duas categorias discretas na horizontal
-# o ".~" antes do AM separa duas categorias discretas na vertical
+# Cruzamentos de variaveis
+t1 = table(bd$polo_do_cliente, bd$prognostico) # tabela de numeros absolutos
 
+# para calcular percentual
+prop.table(t1)*100 
 
-
-
-#################
-# como salvar arquivos de grafico pelo ggplot
-ggsave(filename = "grafico.png",
-       width = 6, height = 2.8)
-
-# Personalizando o grafico
-
-#tipos de  temas para plotagem de grafico
-# + themes_gray ()
-# + theme_dark ()
-# + theme_bw ()
-# + theme_classic ()
+# para calcular 100% fechando na linha, 
+# usamos o parâmetro margin = 1
+round(prop.table(t1, margin = 1)*100, 2) # o numero 2 
 
 
-# Legendas:
+# Testando hipotese:
+# Estou melhor ou pior nos processos em que sou Autor ou Reu 
+# Vamos usar o teste Qui Quadrado (Chi Square)
+chisq.test(t1)
+# Teste Qui-Qua. de Pearson: calculada com 2.75, com df (graus de liberdade)=2 , 
+# com p-valor (maior ou menor do que 0,05 - significativo ou não)
 
-# + theme (legend.positions = "top")
+# Cruzando a materia e o polo do cliente
 
+t2 = table(bd$materia, bd$polo_do_cliente)
+t2
 
-# Paleta de cores:
-library(RColorBrewer)
-display.brewer.all()
+round(prop.table(t2, margin = 2) * 100, 2)
 
+## Chi Sq
+chisq.test(t2)
 
-# + scale_fill_brewer(palette = "Dark2") - > substituir "Dark2" pela paleta de cor que desejar
-
-
-
-
-# Teste de BoxPlot
-
-# bloxpot
-ggplot(bd, aes(x = Species, y = Petal.Length, fill = Species)) +
-  geom_boxplot() +
-  theme_classic() +
-  scale_fill_brewer(palette = "Set1",
-                    labels=c("Setosa", "Versicolor", "Virginica")) +
-  scale_x_discrete(lab=NULL) +
-  labs(title = "Boxplot", subtitle = "Largura da Pétala por Espécie",
-       x = "", y = "Lagura da Pétala", fill = "Especie") +
-  theme(plot.title = element_text(hjust = 0.5), plot.subtitle = element_text(hjust = 0.5)) 
-  
-
-ggsave("bloxpotEXERCICIO.pdf", width = 6, height = 4)
+# Pearson's Chi-squared test
+# 
+# data:  t2
+# X-squared = 155.71, df(grau de liberdade) = 3, p-value (<0,05 é significativo)
+# < 2.2e-16
 
 
+##########################################################################
 
+# Manipulação de dados
+freq(bd$data_de_entrada_do_processo) %>% 
+  pull(n) %>%  mean
 
+# vamos trabalhar com ANO (data)
+class(bd$data_de_entrada_do_processo)
+
+# cria uma variavel chamada ANO no bd
+bd = bd %>%
+  mutate(ano = year(data_de_entrada_do_processo))
+
+bd %>%
+  select(data_de_entrada_do_processo, ano) # seleciona variaveis para trabalhar
+
+# Quero saber quantos processos temos por ano
+bd %>% 
+  group_by(ano) %>% 
+  summarise(contagem = n()) # executa ações para dados agrupados
