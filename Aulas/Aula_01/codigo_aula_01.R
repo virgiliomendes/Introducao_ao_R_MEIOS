@@ -1,247 +1,130 @@
 # Capacitação: Introdução ao R - MEIOS JR
-# 25-07-2020
-# Virgilio de A. Mendes 
-# Ciência Política - UFMG
+# Virgilio Mendes
+# 27/07/2020
 # Aula 01
 
-# TOPICOS:
+# Para dúvidas, consultar a comunidade: https://stackoverflow.com/
 
-#         - Ambiente do RStudio
-#              * Funções
-#                  * Recursos do RStudio (ferramentas, etc)
-# 
-#         - Operações Básicas
-#         - Objetos (classe e tipos de dados)
-#         - Estatísticas e investigações do banco de dados
-    
-# operações básicas 
+# Operações básicas
 
-5 + 7 # soma
-5 - 2 # subtração
-5 * 2 # multiplicação
-5 / 2 # divisão
-5 %/% 2 # divisão inteira
-5 %% 2 # resto da divisão
+# soma
+5 + 7
 
+# subtração
+40 - 30
 
-##########################################################################
+# multiplicação
+80 * 2
 
-# sinal de atribuição
-x <- 5
+# divisão
+50 / 2
+
+# divisão inteira
+5 %/% 2
+
+# resto da divisão
+5%%2
+
+#-------------------------------------
+
+# sinal de atribuição 
+
+# atribuindo ao objeto X o valor 1
+x <- 1
 x
 
-y = 5
+# atribuindo ao objeto y o valor 2
+y = 2
 y
 
-# operações com objetos
-x + y 
-x * y
-x / y
+# atribuindo a z o resultado da subtração
+z = 40 - 30
+z
 
-##########################################################################
-# Vetores
+# soma de objetos
+x + y
 
-x = c(6, 8, 10, 3) # comnado c() cria um vetor - função concatenar
-y = c(4, 6, 3, 5) 
+2 * z
 
-# operações com vetores devem ter vetores com o mesmo munero de elementos
-x + y # operações com vetores
-x - y
-x * y
-x / y
+# atribuindo a um objeto ob1 o resultado da divisão
+ob1 = z / y
+ob1
 
-##########################################################################
 
-# comando para saber a classe do dado/vetor/conjunto
-class(x)
-# x é classe numeric = números que assumem casas decimais
+#-------------------------------------
 
-##########################################################################
 
-# dados do tipo character (texto)
-nome = "Virgilio"
-sobrenome = "Mendes"
+# remove o objeto x do enviroment
+rm(x)
 
-# chamando o objeto
+
+# removem todos os objetos do enviroment
+rm(list = ls())
+
+rm(list = ls(all=T))
+
+# help para função remove (rm)
+?rm
+#-------------------------------------
+
+# tira a classe
+class()
+
+# Funções básicas para manipulação de textos
+
+# atribuindo dados textuais a um objeto
+nome = "Eduardo"
+sobrenome = "Tamaki"
+
 nome
 sobrenome
-# chamando a classe do objeto nome
-class(nome)
 
-##########################################################################
-
-# funções básicas para manipulação de texto
-
-# paste mostra objeto no console
+# printando objetos
 paste(nome, sobrenome)
 
-p1 = "Eu"
-p2 = "gosto"
-p3 = "de"
-p4 = "café"
 
-paste(p1, p2, p3, p4)
-
-# usando paste e separador com ,
-paste(p1, p2, p3, p4, sep = ",")
+# Atribuição de textos em objetos
+ob1 = "Eu"
+ob2 = "gosto"
+ob3 = "de"
+ob4 = "café!"
 
 
-frase = paste(p1, p2, p3, p4) # criando objeto da frase a partir do paste
-tolower(frase) # todos os caracteres em minusculo
-toupper(frase) # todos os caracteres em maiusculo
-frase
+q <- paste(ob1, ob2, ob3, ob4, sep = " ")
 
-grep("não!", frase) # função de buscar padrões de texto
-grep("gosto", frase)
+q
 
-gsub("de", "DE", frase) # função de substituição de caracteres (substituição de "de" por "DE")
+# deixa tudo em minusculo
+tolower(nome)
 
-# estas são estruturas unidimencionais, vetores, 
-# que conjuntos de dados de apenas uma dimensão
+# deixa tudo maiusculo
+toupper(nome)
 
-##########################################################################
+# busca padrões textuais
+grep("escola", q)
 
-# Linhas e colunas - Estruturas de dados bidimensionais
+grep("café", q)
 
-# Matrizes e bancos de dados
-A = matrix(data = 1:16, nrow = 4, ncol = 4)
-A # criando matrix 4 por 4 (numeros de 1 a 16)
-
-# Linhas 
-# representação [1,]
-# Colunas 
-# representação [,1]
-A[2,4]
-
-##########################################################################
-
-# Data frames
-
-nome = c("Virgilio", "Marcos", "Amanda", "Ana")
-idade = c(18, 35, 20, 21)
-altura = c(1.71, 1.90, 1.60, 1.75)
-
-banco = data.frame(nome, idade, altura, stringsAsFactors=F)
-
-class(banco$nome)
-
-####################################################################
-
-# carregar banco de bados iris (inato do r)
-iris = iris
-
-# Mostra os nomes das variaveis
-names(iris)
-
-# Dimensões do bd
-dim(iris)
-
-# mostra os 6 primeiros casos
-head(iris)
-
-# mostra os 6 ultimos casos
-tail(iris)
-
-# tira a classe da variavel
-class(iris$Petal.Length)
-# tirar a classe do banco
-class(iris)
-
-# estrutura do bd
-str(iris)
-
-# tira media 
-mean(iris$Petal.Length, na.rm = T)
-
-# tirar mediana
-median(iris$Sepal.Width, na.rm = T)
-
-# desvio padrão
-sd(iris$Petal.Width, na.rm = T)
-
-# max
-max(iris$Sepal.Width)
-
-# min
-min(iris$Sepal.Length)
+# substituição de caracteres
+gsub("gosto", "odeio", q)
 
 
-# resume as informações da varaivel
-summary(iris$Sepal.Length)
+#-------------------------------------
 
-
-# grafico de barras 
-#barplot(table(iris$Sepal.Length))
-
-#-----------------------------------------------
-
-
-
-# link: https://CRAN.R-project.org/package=dplyr
-# link: https://CRAN.R-project.org/package=questionr 
-
-
-# Usando Banco de dados inato do R: Iris
-options(scipen = 999) # tira notação científica
-
-#rm(list = ls()) # limpa tudo 
-
-# Gráfico de Dispersão
-ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width, col=Species)) + 
-  geom_point(size = 2, shape = 3) +
-  labs(title = "Gráfico de Dispersão", subtitle = "Capacitação MEIOS", 
-       caption = "Virgilio", x = "Comprimento da Sépala", y = "Largura da Sépala") +
-  theme_minimal()
-
-# função para salvar o gráfico em png
-ggsave("grafico_de_dispersao.png", height = 10, width = 12)
-# função para salvar o gráfico em pdf
-ggsave("grafico_de_dispersao.pdf", height = 10, width = 12)
-
-# Box Plot
-ggplot(iris, aes(x = Species, y = Sepal.Length)) +
-  geom_boxplot() +
-  labs(title = "Boxplot ", subtitle = "Capacitação MEIOS", 
-       caption = "Virgilio", x = "Comprimento da Sépala", y = "Largura da Sépala") +
-  theme_minimal()
-
-# função para salvar o gráfico em png
-ggsave("boxplot.png", height = 8, width = 10)
-# função para salvar o gráfico em pdf
-ggsave("boxplot.pdf", height = 8, width = 10)
-#################################################################
-
-# Análises
-
-#install.packages("dplyr")
-#install.packages("questionr")
-#install.packages("ggplot2")
-library(ggplot2) # Para gráficos mais elaborados
+# importando banco de dados
 library(readxl)
-library(questionr) # Functions to Make Surveys Processing Easier
-library(dplyr) # A Grammar of Data Manipulation
+library(questionr)
 
-bd = read_excel("Base de dados - CACS LINGUAS.xlsx")
-
-# carrega bando em formato CSV com separador ";"
-read.csv2("Base de dados - CACS LINGUAS.xlsx")
-# carrega bando em formato CSV com separador ","
-read.cs("Base de dados - CACS LINGUAS.xlsx")
-
-# ver o diretorio de trabalho
-getwd()
-# setar diretório de trabalho
-setwd("C:/Users/Virgilio/Desktop/")
-
-bd1 = read_excel("Base de dados - CACS LINGUAS.xlsx")
+bd = read_excel("Base de dados - CACS LINGUAS.xlsx", sheet = 1)
 
 names(bd)
+bd$v4 = as.factor(bd$v4)
+class(bd$v4)
+summary(bd$v3)
+freq(bd$v6)
 
-# Visualização do banco
-View(bd)
-
-str(bd)
-
+bd$v6[bd$v6=="Ensino superior completo"] = "Barba"
+bd <- na.omit(bd)
 
 
 
